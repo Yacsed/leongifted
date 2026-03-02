@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeonGifted Trainer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="card">
+      <h1>LeonGifted Trainer</h1>
+      <p>Fun practice for 2nd grade gifted-style reasoning</p>
+      <div class="top-actions">
+        <button id="startSessionBtn">Start New Session</button>
+        <button id="resetStatsBtn" class="secondary">Reset Stats</button>
+      </div>
+    </header>
+
+    <section class="card config" id="configCard">
+      <h2>Session Setup</h2>
+      <label>
+        Mode
+        <select id="modeSelect">
+          <option value="practice" selected>Free Practice</option>
+          <option value="focus">Focus Pack (Test Blanc)</option>
+        </select>
+      </label>
+      <label id="focusPackRow" class="hidden">
+        Focus Pack
+        <select id="focusPackSelect">
+          <option value="pack1">Pack 1 - Balanced Warmup</option>
+          <option value="pack2">Pack 2 - Verbal + Nonverbal</option>
+          <option value="pack3">Pack 3 - Nonverbal Intensive</option>
+          <option value="pack4">Pack 4 - Verbal Intensive</option>
+          <option value="pack5">Pack 5 - Final Simulation</option>
+        </select>
+      </label>
+      <label id="questionCountRow">
+        Number of questions
+        <select id="questionCount">
+          <option value="10">10</option>
+          <option value="15" selected>15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+        </select>
+      </label>
+      <fieldset id="typeFieldset">
+        <legend>Question Types</legend>
+        <label><input type="checkbox" value="nonverbal" checked /> Nonverbal Patterns</label>
+        <label><input type="checkbox" value="verbal" checked /> Verbal Reasoning</label>
+        <label><input type="checkbox" value="quant" checked /> Quantitative Reasoning</label>
+        <label><input type="checkbox" value="memory" checked /> Working Memory</label>
+      </fieldset>
+    </section>
+
+    <section class="card game hidden" id="gameCard">
+      <div class="status-row">
+        <p id="progressText">Question 1 / 15</p>
+        <p id="scoreText">Score: 0</p>
+      </div>
+      <p id="soccerBanner" class="soccer-banner">⚽ Play smart like a champion.</p>
+      <p class="pill" id="typePill"></p>
+      <h2 id="questionPrompt"></h2>
+      <div id="choices" class="choices"></div>
+      <p id="feedback" class="feedback"></p>
+      <button id="nextBtn" class="hidden">Next</button>
+    </section>
+
+    <section class="card hidden" id="summaryCard">
+      <h2>Session Complete</h2>
+      <p id="sessionSummary"></p>
+      <p id="readinessSummary" class="readiness"></p>
+      <div id="byTypeSummary"></div>
+      <button id="playAgainBtn">Play Again</button>
+    </section>
+
+    <section class="card">
+      <h2>Progress</h2>
+      <p id="lifetimeStats">No sessions yet.</p>
+    </section>
+
+    <section class="card notes">
+      <h2>Parent Notes</h2>
+      <ul>
+        <li>This app is for practice, not official school test content.</li>
+        <li>Keep sessions short (10-20 min), 4-5 times per week.</li>
+        <li>Focus on calm thinking and explaining answers out loud.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
