@@ -15,6 +15,8 @@ Web app de practice pour entraîner un enfant de 2nd grade sur des compétences 
 - Correction immédiate + explication courte
 - Stats sauvegardées dans le navigateur (localStorage)
 - Messages de motivation soccer pendant la session
+- Verrou parental par PIN (PIN hashé en local dans le navigateur)
+- Mobile-friendly (iPhone/Safari)
 
 ## Focus Packs (test blanc)
 
@@ -84,6 +86,7 @@ GitHub Pages se met à jour automatiquement.
 ## 6) Important
 
 - Cette app est une préparation générale, pas le test officiel de l'école.
+- Le PIN protège l'accès de manière pratique (usage familial), mais ce n'est pas une sécurité serveur enterprise.
 - Si besoin, je peux ajouter ensuite:
   - mode "timed" (chronométré)
   - niveau de difficulté progressif

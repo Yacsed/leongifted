@@ -57,8 +57,13 @@ const SOCCER_LINES = [
 ];
 
 const el = {
+  lockScreen: document.getElementById("lockScreen"),
+  pinInput: document.getElementById("pinInput"),
+  pinMessage: document.getElementById("pinMessage"),
+  unlockBtn: document.getElementById("unlockBtn"),
   startSessionBtn: document.getElementById("startSessionBtn"),
   resetStatsBtn: document.getElementById("resetStatsBtn"),
+  pinSettingsBtn: document.getElementById("pinSettingsBtn"),
   modeSelect: document.getElementById("modeSelect"),
   focusPackRow: document.getElementById("focusPackRow"),
   focusPackSelect: document.getElementById("focusPackSelect"),
@@ -116,6 +121,55 @@ function uniqueWrongOptions(correct, pool, count = 3) {
 
 function createQuestion(type, prompt, correct, options, explain) {
   return { type, prompt, correct, options, explain };
+}
+
+function toHex(buffer) {
+  return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return toHex(hash);
+}
+
+function validPin(pin) {
+  return typeof pin === "string" && pin.length >= 4 && pin.length <= 12;
+}
+
+async function savePin(pin) {
+  const hash = await sha256(pin);
+  localStorage.setItem("leonGiftedPinHash", hash);
+}
+
+async function verifyPin(pin) {
+  const stored = localStorage.getItem("leonGiftedPinHash");
+  if (!stored) return false;
+  return (await sha256(pin)) === stored;
+}
+
+async function ensurePinExists() {
+  const existing = localStorage.getItem("leonGiftedPinHash");
+  if (existing) return true;
+  const pin = prompt("Parent setup: create a PIN (4-12 characters).");
+  if (!validPin(pin)) {
+    alert("PIN not set. Reload and enter a valid PIN (4-12 characters).");
+    return false;
+  }
+  await savePin(pin);
+  return true;
+}
+
+function lockApp() {
+  el.lockScreen.classList.remove("hidden");
+  document.querySelector(".app").classList.add("hidden");
+  el.pinInput.value = "";
+  el.pinMessage.textContent = "";
+}
+
+function unlockApp() {
+  el.lockScreen.classList.add("hidden");
+  document.querySelector(".app").classList.remove("hidden");
 }
 
 function genVerbalQuestions() {
@@ -562,5 +616,58 @@ el.resetStatsBtn.addEventListener("click", () => {
   renderStats();
 });
 
-onModeChange();
-renderStats();
+el.unlockBtn.addEventListener("click", async () => {
+  const pin = el.pinInput.value.trim();
+  const ok = await verifyPin(pin);
+  if (!ok) {
+    el.pinMessage.textContent = "Wrong PIN. Try again.";
+    return;
+  }
+  unlockApp();
+});
+
+el.pinInput.addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    el.unlockBtn.click();
+  }
+});
+
+el.pinSettingsBtn.addEventListener("click", async () => {
+  const current = prompt("Enter current PIN:");
+  if (!current) return;
+  const ok = await verifyPin(current.trim());
+  if (!ok) {
+    alert("Current PIN is incorrect.");
+    return;
+  }
+
+  const action = prompt("Type NEW to change PIN, or REMOVE to disable PIN.");
+  if (!action) return;
+
+  if (action.toUpperCase() === "REMOVE") {
+    localStorage.removeItem("leonGiftedPinHash");
+    alert("PIN removed. App will ask to create a new PIN on next reload.");
+    return;
+  }
+
+  if (action.toUpperCase() === "NEW") {
+    const next = prompt("Enter new PIN (4-12 characters):");
+    if (!validPin(next)) {
+      alert("Invalid PIN length. Use 4-12 characters.");
+      return;
+    }
+    await savePin(next);
+    alert("PIN updated.");
+  }
+});
+
+async function init() {
+  const ready = await ensurePinExists();
+  if (!ready) return;
+  onModeChange();
+  renderStats();
+  lockApp();
+}
+
+init();

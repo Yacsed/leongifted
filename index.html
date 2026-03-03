@@ -7,13 +7,25 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="app">
+  <section class="lock-screen" id="lockScreen">
+    <div class="lock-card">
+      <h2>Parent Lock</h2>
+      <p>Enter PIN to access LeonGifted.</p>
+      <input id="pinInput" type="password" inputmode="numeric" autocomplete="off" placeholder="Enter PIN" />
+      <p id="pinMessage" class="pin-message"></p>
+      <div class="top-actions">
+        <button id="unlockBtn">Unlock</button>
+      </div>
+    </div>
+  </section>
+  <main class="app hidden">
     <header class="card">
       <h1>LeonGifted Trainer</h1>
       <p>Fun practice for 2nd grade gifted-style reasoning</p>
       <div class="top-actions">
         <button id="startSessionBtn">Start New Session</button>
         <button id="resetStatsBtn" class="secondary">Reset Stats</button>
+        <button id="pinSettingsBtn" class="secondary">PIN Settings</button>
       </div>
     </header>
 
